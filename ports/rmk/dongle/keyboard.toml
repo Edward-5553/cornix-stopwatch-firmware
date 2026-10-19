@@ -119,30 +119,34 @@ map = """
 [keymap]
 layers = 5
 
+# GUI is Win on Windows and Command on macOS; Alt is Option on macOS.
+# LGui/RGui are mirrored at positions 39/48; LAlt is at 40. Leave 46/47 unassigned.
 [[keymap.layer]]
 keys = """
 Escape Q W E R T Y U I O P Backslash
 Tab A S D F G H J K L Semicolon Quote
 LShift Z X C V B CapsLock AudioMute N M Comma Dot Slash RShift
-LCtrl No No WM(Delete, LCtrl | LAlt) WM(Space, LAlt) LT(1, Space) LT(2, Enter) Backspace No No No Delete
+LCtrl LGui LAlt WM(Delete, LCtrl | LAlt) WM(Space, LAlt) LT(1, Space) LT(2, Enter) Backspace No No RGui Delete
 """
 encoders = [["MouseWheelDown", "MouseWheelUp"], ["AudioVolUp", "AudioVolDown"]]
 
+# Keep base modifiers available while holding a layer.
 [[keymap.layer]]
 keys = """
 No _ _ Up _ _ _ Kc7 Kc8 Kc9 _ _
 No _ Left Down Right _ Dot Kc4 Kc5 Kc6 _ _
 No WM(Z, LCtrl) WM(X, LCtrl) WM(C, LCtrl) WM(V, LCtrl) _ CapsLock AudioMute Kc0 Kc1 Kc2 Kc3 _ _
-No No No _ _ _ _ _ _ No No No
+_ _ _ _ _ _ _ _ No No _ No
 """
 encoders = [["MouseWheelDown", "MouseWheelUp"], ["AudioVolUp", "AudioVolDown"]]
 
+# Brackets are individual key presses, with no paired text or cursor movement.
 [[keymap.layer]]
 keys = """
 WM(Grave, LShift) WM(Kc1, LShift) WM(Kc2, LShift) WM(Kc3, LShift) WM(Kc4, LShift) WM(Kc5, LShift) WM(Kc6, LShift) WM(Kc7, LShift) WM(Kc8, LShift) WM(Kc9, LShift) WM(Kc0, LShift) Grave
-Backslash Macro(0) Macro(1) Macro(2) Minus WM(Minus, LShift) WM(Equal, LShift) Equal WM(Dot, LShift) RightBracket WM(RightBracket, LShift) WM(Backslash, LShift)
+Backslash WM(LeftBracket, LShift) LeftBracket WM(Comma, LShift) Minus WM(Minus, LShift) WM(Equal, LShift) Equal WM(Dot, LShift) RightBracket WM(RightBracket, LShift) WM(Backslash, LShift)
 LShift F2 F3 F4 F5 F6 CapsLock AudioMute F7 F8 F9 F10 F11 F12
-No No No F1 _ _ _ _ _ No No No
+_ _ _ F1 _ _ _ _ No No _ No
 """
 encoders = [["MouseWheelDown", "MouseWheelUp"], ["AudioVolUp", "AudioVolDown"]]
 
@@ -151,7 +155,7 @@ keys = """
 _ _ _ _ _ _ _ _ _ _ _ _
 _ _ _ _ _ _ _ _ _ _ _ _
 _ _ _ _ _ _ CapsLock AudioMute _ _ _ _ _ _
-No No No _ _ _ _ _ _ No No No
+_ _ _ _ _ _ _ _ No No _ No
 """
 encoders = [["MouseWheelDown", "MouseWheelUp"], ["AudioVolUp", "AudioVolDown"]]
 
@@ -160,7 +164,7 @@ keys = """
 _ _ _ _ _ _ _ _ _ _ _ _
 _ _ _ _ _ _ _ _ _ _ _ _
 _ _ _ _ _ _ CapsLock AudioMute _ _ _ _ _ _
-No No No _ _ _ _ _ _ No No No
+_ _ _ _ _ _ _ _ No No _ No
 """
 encoders = [["MouseWheelDown", "MouseWheelUp"], ["AudioVolUp", "AudioVolDown"]]
 
@@ -173,21 +177,3 @@ hold_timeout = "200ms"
 gap_timeout = "200ms"
 # RMK measures quick-tap from release, unlike the current ZMK press-to-press rule.
 quick_tap_timeout = "150ms"
-
-[[behavior.macro.macros]]
-operations = [
-  { operation = "text", text = "{}" },
-  { operation = "tap", keycode = "Left" },
-]
-
-[[behavior.macro.macros]]
-operations = [
-  { operation = "text", text = "[]" },
-  { operation = "tap", keycode = "Left" },
-]
-
-[[behavior.macro.macros]]
-operations = [
-  { operation = "text", text = "<>" },
-  { operation = "tap", keycode = "Left" },
-]

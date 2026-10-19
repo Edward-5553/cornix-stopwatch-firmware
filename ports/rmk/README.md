@@ -13,8 +13,8 @@ Cornix 右半 nRF52840 ── RMK BLE split ──┘
 
 - 三个固件目标：`cornix-left`、`cornix-right`、`cornix-rmk-stopwatch`。
 - S3 作为无本地矩阵的 split central，两个 Cornix 均为 peripheral。
-- 50 键、五层、两个旋钮、Space/Enter layer-tap、三种括号宏。
-- 默认键位取自本仓库 `config/cornix.keymap` 的快照；后续独立编辑
+- 50 键、五层、两个旋钮、Space/Enter layer-tap、单个括号输入。
+- 默认键位最初取自本仓库 `config/cornix.keymap` 的快照，现独立维护；编辑
   `config/layout.toml`，运行 `python tools/generate.py` 同步两个构建配置。
 - USB 键盘、媒体键、鼠标滚轮和 Vial 改键。RMK 自带 BLE 主机输出也保留，
   首轮验收以 USB 输出为准。
@@ -37,6 +37,32 @@ Cornix 右半 nRF52840 ── RMK BLE split ──┘
 
 三个设备都必须刷本方案配套固件，不能混用 ZMK 两半或假定兼容原厂 RMK 二进制。
 本方案使用 `split` central 模式，没有使用 RMK 的“单键盘报告转发”`dongle` feature。
+
+## 当前键位：Win / Mac 共用
+
+L0 补入三个修饰键，保留两个空位。位置编号从 0 开始，与键位预览一致：
+
+| 位置 | Windows | macOS | 用途 |
+| --- | --- | --- | --- |
+| 39（左下 Ctrl 右侧） | 左 Win | 左 Command | 系统与应用快捷键 |
+| 40（位置 39 右侧） | 左 Alt | 左 Option | Alt/Option 组合键 |
+| 46（右拇指区，Backspace 右侧） | 未分配 | 未分配 | 预留 |
+| 47（位置 46 右侧） | 未分配 | 未分配 | 预留 |
+| 48（Delete 左侧） | 右 Win | 右 Command | 与左 Command（位置 39）对称 |
+
+保留原来的左 Ctrl；Ctrl 与上述新增修饰键在 L1–L4 透传到 L0，
+先切层再按修饰键也可使用。Win/Command 和 Alt/Option 采用标准 HID 键码，
+无需切换模式；例如 Mac 上用 Command+C/V，Windows 上用 Ctrl+C/V。
+L1 的 Z/X/C/V 仍固定发送 Ctrl 组合，原有 Ctrl+Alt+Delete、Alt+Space 也保留，
+本次没有加入系统识别或随系统变化的快捷键。
+
+L2 的 A/S/D 位置分别只输入 `{`、`[`、`<`；右侧原有 `}`、`]`、`>` 保留。
+第一行的 `(`、`)` 继续单独输入。固件不再自动补右括号或发送方向左键，
+但编辑器或输入法自身的自动补全仍由软件设置控制。符号按美式键盘布局定义。
+
+若设备已通过 Vial 保存过键位，正常刷固件不会覆盖它们。可在 Vial 按上表更新
+对应位置，将 L2 三个旧 Macro 绑定改为单个符号，并把高层对应修饰键设为透明，
+位置 46/47 在所有层均设为未分配；无需为这次改键清除分体配对或整片 Flash。
 
 ## 固定依赖
 
@@ -132,7 +158,7 @@ WPM 使用 RMK 自带统计器，与旧 ESP-IDF 版“可打印 HID 字符”统
 
 - RMK 的 permissive hold + 200 ms 接近当前 balanced layer-tap，但不是同一实现。
 - RMK quick-tap 150 ms 从上次释放计时，ZMK 配置对应的规则从按下计时。
-- 括号宏使用 RMK 原生 text/tap 操作；没有声称和 ZMK 的 30 ms tap/wait 时序相同。
+- RMK 的 L2 括号已改为普通单键输入；ZMK 预设仍保留原有自动配对宏。
 - 滚轮使用 RMK 原生鼠标行为，方向配置为左旋钮 CW 向下、CCW 向上。
 - 默认请求 7.5 ms split 间隔不等于端到端延迟；需要实机记录协商结果和输入表现。
 - 上游睡眠、宏等待、断线后的按键状态仍需实测；不要把“使用原生 RMK”当作已解决
@@ -142,7 +168,7 @@ WPM 使用 RMK 自带统计器，与旧 ESP-IDF 版“可打印 HID 字符”统
 
 1. USB 枚举、两半连接、全部普通键和旋钮按压。
 2. 两个旋钮方向与步进，跨两半组合键，Space/Enter 连击和长按切层。
-3. 快速输入、括号宏与实体按键交错，比较原有 ZMK dongle。
+3. 快速输入、单个括号、Win/Command 与 Alt/Option 组合，以及切层后的修饰键。
 4. 断线松键、重连、三设备掉电后的配对保持、USB 拔插和电脑休眠。
 5. 对照屏幕检查左右断线、电量未知/低电、层切换、旋钮提示和主机休眠唤醒；
    比较猫动画工作时的输入延迟。屏幕实机点亮与时序仍需此次硬件验证。
